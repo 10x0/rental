@@ -1,0 +1,84 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<style>
+  .pointer{
+    cursor: pointer;
+  }
+</style>
+
+<!-- Content Row -->
+<div class="row">
+  <!-- Search Start -->
+  <div class="container-fluid bg-white pt-3 px-lg-5">
+    <form class="row mx-n2" method="POST">
+      {% csrf_token %}
+        <div class="col-xl-8 col-lg-4 col-md-6 px-2">
+            <div class="time mb-3" id="time" data-target-input="nearest">
+                <input name="query" type="text" class="form-control p-4 border border-2 border-primary" placeholder="I am looking for..."/ >
+            </div>
+        </div>
+        <div class="col-xl-2 col-lg-4 col-md-6 px-2">
+          <select name="type" class="custom-select px-4 mb-3 border border-2 border-primary" style="height: 50px;">
+              <option value="Car" selected>Cars</option>
+              <option value="Bike">Bikes</option>
+          </select>
+      </div>
+        <div class="col-xl-2 col-lg-4 col-md-6 px-2">
+            <button class="btn btn-primary btn-block mb-3" type="submit" style="height: 50px;">Search</button>
+        </div>
+      </form>
+    </div>
+<!-- Search End -->
+
+  <!-- Rent A Car Start -->
+    <div class="container-fluid py-5">
+    <div class="container pt-5 pb-3">
+        <h1 class="display-4 text-uppercase text-center mb-5">Find Your Vehicle</h1>
+        <div class="row">
+          {% for vehicle in vehicles %}
+            <div class="col-lg-4 col-md-6 mb-2 pointer">
+                <div class="rent-item mb-4">
+                    <img class="img-fluid mb-4" style="height: 200px;object-fit: cover;object-position: center;" src="{{vehicle.images.first}}" alt="">
+                    <h4 class="mb-4">{{vehicle.name}}</h4>
+                    <div class="d-flex justify-content-center mb-4">
+                        <div class="px-2">
+                            {% if vehilce.type == Car %}
+                            <i class="fa fa-car text-primary mr-1"></i>
+                            {% else %}
+                            <i class="fa fa-motorcycle text-primary mr-1"></i>
+                            {% endif %}
+                            <span>{{vehicle.year}}</span>
+                        </div>
+                        <div class="px-2 border-left border-right">
+                            <i class="fa fa-cogs text-primary mr-1"></i>
+                            <span>AUTO</span>
+                        </div>
+                        <div class="px-2">
+                            <i class="fa fa-road text-primary mr-1"></i>
+                            <span>25K</span>
+                        </div>
+                    </div>
+                    <a class="btn btn-primary px-3" href="{% url 'main:book' vehicle.id %}">${{vehicle.daily_rate}}/Day</a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    </div>
+  <!-- Rent A Car End -->
+
+  <div class="container-fluid py-5">
+    {% for message in messages %}
+    <div class="container pt-5 pb-3">
+      <h4 class="display-6 text-uppercase text-center text-primary mb-5">
+        {{message}}
+      </h4>
+    </div>
+  </div>
+  {% endfor %}
+
+</div>
+
+{% endblock %}

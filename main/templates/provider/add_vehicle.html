@@ -1,0 +1,65 @@
+{% extends 'provider/base.html' %}
+
+{% block content %}
+<!-- Page Heading -->
+<section style="width: 60vw;" class="m-auto p-4 bg-white rounded shadow">
+    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+        <h1 class="h3 mb-0 text-gray-800">Add new</h1>
+    </div>
+    <form class="d-flex flex-column" method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+
+        <div class="mb-3">
+            <div id="gallery">
+
+            </div>
+        </div>
+        <div class="mb-3 custom-file">
+            <label class="custom-file-label">Select images</label>
+            <input required name="images" class="custom-file-input" onChange="loadFile(event)" id="image" type="file"
+                accept="image/*" multiple />
+        </div>
+
+        <div class="mb-3">
+            <label for="name" class="form-label">Vehicle Name</label>
+            <input required type="text" class="form-control" name="name" id="name" placeholder="Enter vehicle name">
+        </div>
+        <div class="mb-3">
+            <label>Vehicle Type</label>
+            <select class="form-select custom-select" aria-label="Select vehicle type" name="type">
+                <option value="Car">Car</option>
+                <option value="Bike">Bike</option>
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <label for="daily_rate" class="form-label">Vehicle Daily Rate</label>
+            <input type="text" class="form-control" name="daily_rate" id="daily_rate"
+                placeholder="Enter daily rate for vehicle">
+        </div>
+
+        <div class="mb-3">
+            <label for="year" class="form-label">Vehicle First Purchased Year</label>
+            <input required type="number" class="form-control" name="year" id="year"
+                placeholder="Enter vehicle purchased year">
+        </div>
+
+        <div class="m-auto">
+            <input type="submit" class="btn btn-success" value="Add vehicle" />
+        </div>
+    </form>
+</section>
+
+<script>
+    var loadFile = function (event) {
+        content='';
+        let files = event.target.files;
+        for (var i=0;i<files.length;i++){
+            let url = URL.createObjectURL(event.target.files[i]);
+            content += `<img src=${url} width='250' height='200' />`;
+        }
+        document.querySelector('#gallery').innerHTML = content;
+    };
+</script>
+
+{% endblock %}

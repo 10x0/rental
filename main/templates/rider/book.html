@@ -1,0 +1,143 @@
+{% extends 'base.html' %}
+
+
+
+{% block head %}
+<script src="https://khalti.s3.ap-south-1.amazonaws.com/KPG/dist/2020.12.17.0.0.0/khalti-checkout.iffe.js"></script>
+<style>
+    .pointer{
+        cursor: pointer;
+    }
+    .active_image{
+        border: 3px solid #F77D0A;
+    }
+    #payment-button{
+        background: #5C2E8F !important;
+        padding: 10px 20px;
+        text-align: center;
+        color: #fff;
+    }
+    #payment-button:hover{
+        background: #7434bd !important;
+        cursor: pointer;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+
+<!-- Page Heading -->
+<div class="d-sm-flex align-items-center justify-content-between mb-4">
+    <h1 class="display-5 mb-0 text-gray-800">Book Now</h1>
+</div>
+
+<!-- Content Row -->
+<section style="height: 60vh;" class="shadow d-flex">
+    <div class="w-100 p-4 d-flex flex-column">
+        <div id="gallery w-100 d-flex justify-content-center">
+            <div id="images d-flex">      
+                <div id="display_image">
+                    <img src="{{vehicle.images.first}}" height='450' class="w-100" />
+                </div>
+                <div class="my-4">
+                    {% for image in vehicle.images.all %}    
+                    <img class="{% if image == vehicle.images.all|first %}active_image{% endif %} image pointer" src="{{image}}" width='50' height="50" onclick="showImage(event,'{{image}}')" /> 
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="w-100 h-100">
+        <h3 class="mx-4 mt-4">{{vehicle.name}}</h3>
+        <h6 class="mx-4">Rs. {{vehicle.daily_rate}}/day</h6>
+    <form name="booking_form" method="POST" class="d-flex flex-column p-4 justify-content-center align-items-center">
+        {% csrf_token %}
+        {% for message in messages %}
+            <p class="container-fluid alert alert-danger">{{message}}</p>
+        {% endfor %}
+        <div class="my-2">
+            <label class="d-block text-dark">Pick Up Date</label>
+            <input type="date" id="pickup_date" name="pickup_date" class="p-2 border border-2" />
+        </div>
+        <div class="my-2">
+            <label class="d-block text-dark">Return Date</label>
+            <input type="date" id="return_date" name="return_date" class="p-2 border border-2" />
+        </div>
+        <p class="my-2 w-50" id="payment-button">Pay with Khalti</input>
+    </form>
+</div>
+</section>
+<script>
+    var pickup_date = document.querySelector('#pickup_date');
+    var return_date = document.querySelector('#return_date');
+
+    pickup_date.min  = new Date(new Date().getTime() - new Date().getTimezoneOffset() * 60000).toISOString().split("T")[0];
+    pickup_date.addEventListener('change',()=>{
+        let date = new Date(pickup_date.value)
+        date.setDate(date.getDate()+1);
+        return_date.min = date.toISOString().split("T")[0];
+    })
+
+
+    var config = {
+        // replace the publicKey with yours
+        "publicKey": "test_public_key_0f6b3b01bd1748b89419956c4824d553",
+        "productIdentity": "1234567890",
+        "productName": "{{vehicle.name}}",
+        "productUrl": "http://gameofthrones.wikia.com/wiki/Dragons",
+        "paymentPreference": [
+            "KHALTI",
+            "EBANKING",
+            "MOBILE_BANKING",
+            "CONNECT_IPS",
+            "SCT",
+        ],
+        "eventHandler": {
+            onSuccess(payload) {
+                document.forms['booking_form'].submit();
+            },
+            onError(error) {
+                console.log(error);
+            },
+            onClose() {
+                console.log('widget is closing');
+            }
+        }
+    };
+
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                // Does this cookie string begin with the name we want?
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+
+    var checkout = new KhaltiCheckout(config);
+    var btn = document.getElementById("payment-button");
+    btn.onclick = function () {
+        // minimum transaction amount must be 10, i.e 1000 in paisa.
+        checkout.show({ amount: "{% widthratio vehicle.daily_rate 1 100 %}" });
+    }
+
+    function showImage(event,image){
+        let images = document.querySelectorAll('.image');
+        images.forEach(image=>{
+            image.classList.remove('active_image')
+        })
+        if(!event.target.classList.contains('active_image')){
+            event.target.classList.add('active_image');
+        }
+        let div = document.querySelector('#display_image').innerHTML = `<img src=${image} height='450'  class="w-100" />`;
+    }
+</script>
+
+{% endblock %}

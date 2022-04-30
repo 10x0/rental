@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<!-- Page Heading -->
+<div class="d-sm-flex align-items-center justify-content-between mb-4">
+    <h1 class="h3 mb-0 text-gray-800">My Bookings</h1>
+</div>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Vehicle Name</th>
+            <th scope="col">Vehicle Type</th>
+            <th scope="col">Pick Up</th>
+            <th scope="col">Days</th>
+            <th scope="col">Rate (Rs.)</th>
+            <th scope="col">Total (Rs.)</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for booking in bookings %}
+        <tr>
+            <th scope="row">{{forloop.counter}}</th>
+            <td>{{booking.vehicle.name}}</td>
+            <td>{{booking.vehicle.type}}</td>
+            <td>{{booking.pickup_time}}</td>
+            <td>{{booking.days}}</td>
+            <td>{{booking.vehicle.daily_rate}}</td>
+            <td>{{booking.payment}}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+{% endblock %}

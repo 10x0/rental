@@ -1,0 +1,117 @@
+<!-- Sidebar -->
+<ul class="navbar-nav {% if user.role == 'Rider' %}bg-gradient-primary{% else %}bg-gradient-success{% endif %} sidebar sidebar-dark accordion"
+    id="accordionSidebar">
+
+    <!-- Sidebar - Brand -->
+    <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.html">
+        <div class="sidebar-brand-icon rotate-n-15">
+            <i class="fas fa-car"></i>
+        </div>
+        <div class="sidebar-brand-text mx-3">Rent Nepal</div>
+    </a>
+
+    <!-- Divider -->
+    <hr class="sidebar-divider my-0">
+
+    {% with request.resolver_match.url_name as url_name %}
+
+    <!-- Divider -->
+    <hr class="sidebar-divider">
+
+    {% if user.role == 'Rider' %}
+
+    <!-- Heading -->
+    <div class="sidebar-heading">
+        Rent now
+    </div>
+
+    <!-- Nav Item - Pages Collapse Menu -->
+    <li class="nav-item {% if url_name in 'main:rider_cars' %}active{% endif %}">
+        <a class="nav-link collapsed" href="{% url 'main:rider_cars' %}" aria-expanded="true"
+            aria-controls="collapseTwo">
+            <i class="fas fa-fw fa-car"></i>
+            <span>Cars</span>
+        </a>
+    </li>
+
+    <!-- Nav Item - Utilities Collapse Menu -->
+    <li class="nav-item {% if url_name in 'main:rider_bikes' %}active{% endif %}">
+        <a class="nav-link collapsed" href="{% url 'main:rider_bikes' %}" aria-expanded="true"
+            aria-controls="collapseUtilities">
+            <i class="fas fa-fw fa-motorcycle"></i>
+            <span>Bikes</span>
+        </a>
+    </li>
+
+    <!-- Divider -->
+    <hr class="sidebar-divider">
+
+
+    <!-- Heading -->
+    <div class="sidebar-heading">
+        Manage
+    </div>
+
+    <!-- Nav Item - Utilities Collapse Menu -->
+    <li class="nav-item {% if url_name in 'main:bookings' %}active{% endif %}">
+        <a class="nav-link collapsed" href="{% url 'main:bookings' %}" aria-expanded="true"
+            aria-controls="collapseUtilities">
+            <i class="fas fa-fw fa-book"></i>
+            <span>My Bookings</span>
+        </a>
+    </li>
+
+    {% else %}
+    <!-- Heading -->
+    <div class="sidebar-heading">
+        Rent now
+    </div>
+
+    <!-- Nav Item - Pages Collapse Menu -->
+    <li class="nav-item {% if url_name in 'main:provider' %}active{% endif %}">
+        <a class="nav-link collapsed" href="{% url 'main:provider' %}" aria-expanded="true" aria-controls="collapseTwo">
+            <i class="fas fa-fw fa-car"></i>
+            <span>My Vehicles</span>
+        </a>
+    </li>
+
+    <!-- Nav Item - Pages Collapse Menu -->
+    <li class="nav-item {% if url_name in 'main:add_vehicle' %}active{% endif %}">
+        <a class="nav-link collapsed" href="{% url 'main:add_vehicle' %}" aria-expanded="true"
+            aria-controls="collapseTwo">
+            <i class="fas fa-fw fa-add"></i>
+            <span>Add Vehicle</span>
+        </a>
+    </li>
+
+    <!-- Divider -->
+    <hr class="sidebar-divider">
+
+
+    <!-- Heading -->
+    <div class="sidebar-heading">
+        Manage
+    </div>
+
+    <!-- Nav Item - Utilities Collapse Menu -->
+    <li class="nav-item">
+        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseUtilities"
+            aria-expanded="true" aria-controls="collapseUtilities">
+            <i class="fas fa-fw fa-credit-card"></i>
+            <span>My Earnings</span>
+        </a>
+    </li>
+    {% endif %}
+
+    {% endwith %}
+
+    <!-- Divider -->
+    <hr class="sidebar-divider d-none d-md-block">
+
+    <!-- Sidebar Toggler (Sidebar) -->
+    <div class="text-center d-none d-md-inline">
+        <button class="rounded-circle border-0" id="sidebarToggle"></button>
+    </div>
+
+</ul>
+<!-- End of Sidebar -->

@@ -1,0 +1,70 @@
+{% extends 'provider/base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="d-sm-flex align-items-center justify-content-between mb-4">
+    <h1 class="h3 mb-0 text-gray-800">My vehicles</h1>
+</div>
+<div class="row">
+    {% for vehicle in vehicles %}
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card border-left-success shadow h-100 py-2">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="rent-item mb-4">
+                        <img style="width: 100%; height: 200px; object-fit: cover;" class="img-fluid mb-4"
+                            src="{{vehicle.images.first}}" alt="vehicle_{{vehicle.id}}" />
+                        <h4 class="text-uppercase mb-4">{{vehicle.name}}</h4>
+                        <div class="d-flex justify-content-center mb-4">
+                            <div class="px-2 border-right">
+                                <i class="fa fa-car text-success mr-1"></i>
+                                <span>{{vehicle.year}}</span>
+                            </div>
+                            <div class="px-2">
+                                <i class="fa-solid fa-money-bill-1-wave text-success"></i>
+                                <span>${{vehicle.daily_rate}}/Day</span>
+                            </div>
+                        </div>
+                        <div class="d-flex justify-content-center">
+                            <form method="POST" action="{{BASE_URL}}/removeVehicle/{{vehicle.id}}">
+                                    {% csrf_token %}
+                                <button class="btn btn-danger px-3" type="submit">Remove</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+<script>
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                // Does this cookie string begin with the name we want?
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+
+    var removeVehicle = function (id){
+        const csrftoken = getCookie('csrftoken');
+        fetch(`{{BASE_URL}}/removeVehicle/${id}`, {
+            method: 'DELETE',
+            headers: {
+                'X-CSRFToken': csrftoken,
+                'Content-Type': 'application/json',
+            }
+        }).catch(error => console.log(error))
+    };
+</script>
+{% endblock %}
